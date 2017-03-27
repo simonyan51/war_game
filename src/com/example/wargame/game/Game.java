@@ -25,7 +25,7 @@ public class Game {
     private int cols;
     private int rows;
     private static int countSoldiers = 0;
-    private Soldier[] soldiers = new Soldier[countSoldiers];
+    private Soldier[] soldiers = new Soldier[10];
 
     public Game(int rows, int cols) {
         this.rows = rows;
@@ -73,24 +73,26 @@ public class Game {
         }
         Coordinates coords = new Coordinates(x, y);
         soldier.setCoordinates(coords);
-        countSoldiers++;
-        soldiers[countSoldiers - 1] = soldier;
+        soldiers[countSoldiers] = soldier;
+        this.countSoldiers++;
     };
 
     public void start() {
-        for (int i = 0; i < rows; i++) {
+        for (int i = 0; i < rows * 2; i++) {
             String[] selectedResults = new String[6];
             Scanner input = new Scanner(System.in);
             System.out.println("You Set " + rows + " Rows, Its Mean You Should Create " + (rows * 2) + " Characters");
             System.out.print("Create Character: Whats Race is Your Character, Human Or Mystic? ");
             selectedResults[0] = input.nextLine();
-            System.out.print("You Choose " + selectedResults[0] + " Race, Now Choose Type Of " + selectedResults[0] + ": Infantry, Comando or General? ");
-            selectedResults[1] = input.nextLine();
             System.out.print("Now, Set Name: ");
             selectedResults[2] = input.nextLine();
             if (selectedResults[0].toLowerCase().equals("human")) {
+                System.out.print("You Choose " + selectedResults[0] + " Race, Now Choose Type Of " + selectedResults[0] + ": Infantry, Comando or General? ");
+                selectedResults[1] = input.nextLine();
                 System.out.print("You Choose " + selectedResults[1] + " Type, Now Choose Weapon: Shotgun, Gun or Rifle? ");
             } else if (selectedResults[0].toLowerCase().equals("mystic")) {
+                System.out.print("You Choose " + selectedResults[0] + " Race, Now Choose Type Of " + selectedResults[0] + ": Orc, Troll, Elf? ");
+                selectedResults[1] = input.nextLine();
                 System.out.print("You Choose " + selectedResults[1] + " Type, Now Choose Weapon: Knife, Sword or Axe? ");
             }
             selectedResults[3] = input.nextLine();
