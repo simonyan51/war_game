@@ -13,17 +13,9 @@ import com.example.wargame.weapons.humanWeapons.types.Shotgun;
 public abstract class Human extends Soldier {
 
     private static final String RACE = "Human";
-    private Weapon weapon;
 
     protected Human(String name, String type, int health, int strength, int speed) {
         super(RACE, name, type, health, strength, speed);
     }
 
-    public Weapon getWeapon() {
-        return weapon;
-    }
-
-    public void setWeapon(Weapon weapon) {
-        this.weapon = weapon;
-    }
 }

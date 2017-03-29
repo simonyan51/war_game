@@ -14,8 +14,9 @@ public abstract class Soldier {
     private int strength;
     private int speed;
     private Coordinates coordinates;
+    private Weapon weapon;
 
-    protected Soldier(String race, String type, String name, int health, int strength, int speed) {
+    protected Soldier(String race, String name, String type, int health, int strength, int speed) {
         this.race = race;
         this.type = type;
         this.name = name;
@@ -45,7 +46,7 @@ public abstract class Soldier {
     }
 
     public void setHealth(int health) {
-        this.health = health;
+        this.health -= health;
     }
 
     public int getStrength() {
@@ -72,5 +73,20 @@ public abstract class Soldier {
         this.coordinates = coordinates;
     }
 
-    public abstract void setWeapon(Weapon weapon);
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
+    }
+
+    public void setWeapon(Weapon weapon) {
+        this.weapon = weapon;
+    }
+
 }

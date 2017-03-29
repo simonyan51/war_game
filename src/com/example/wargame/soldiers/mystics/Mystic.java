@@ -13,16 +13,9 @@ import com.example.wargame.weapons.mysticWeapons.types.Sword;
  */
 public abstract class Mystic extends Soldier {
     private static final String RACE = "Mystic";
-    private Weapon weapon;
+
     protected Mystic(String name, String type, int health, int strength, int speed) {
         super(RACE, name, type, health, strength, speed);
     }
-
-    public Weapon getWeapon() {
-        return weapon;
-    }
-
-    public void setWeapon(Weapon weapon) {
-        this.weapon = weapon;
-    }
+    
 }

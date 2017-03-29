@@ -25,87 +25,123 @@ public class Game {
     private int cols;
     private int rows;
     private static int countSoldiers = 0;
-    private Soldier[] soldiers = new Soldier[10];
+    private Soldier[] soldiers = new Soldier[4];
 
     public Game(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
     }
 
-    private void createCharacter(String race, String type, String name, String weapon, int x, int y) {
-        Soldier soldier = null;
-        if (race.toLowerCase().equals("human")) {
-            if (type.toLowerCase().equals("general")) {
-                soldier = new General(name);
-            } else if (type.toLowerCase().equals("comando")) {
-                soldier = new Comando(name);
-            } else {
-                soldier = new Infantry(name);
+    private void createCharacters() {
+        Soldier bob = new General("Bob");
+        bob.setWeapon(new Rifle());
+        bob.setCoordinates(new Coordinates(0, 0));
+
+        Soldier galactus = new Troll("Galactus");
+        galactus.setWeapon(new Axe());
+        galactus.setCoordinates(new Coordinates(cols, 0));
+
+        Soldier john = new Comando("John");
+        john.setWeapon(new Shotgun());
+        john.setCoordinates(new Coordinates(0, 1));
+
+        Soldier babylon = new Elf("Babylon");
+        babylon.setWeapon(new Sword());
+        babylon.setCoordinates(new Coordinates(cols, 1));
+
+        soldiers[0] = bob;
+        soldiers[1] = john;
+        soldiers[3] = galactus;
+        soldiers[2] = babylon;
+    }
+
+    private void moveProgress(Soldier sold1, Soldier sold2) {
+        while(sold1.getCoordinates().getX() != sold2.getCoordinates().getX()) {
+
+            if (sold1.getCoordinates().getX() > sold2.getCoordinates().getX()) {
+                sold1.getCoordinates().setX(-(sold1.getCoordinates().getX() - sold2.getCoordinates().getX()));
+                System.out.println(sold1.getRace() + " "
+                        + sold1.getType() + " "
+                        + sold1.getName() + " (" + sold1.getHealth() + ") moved to "
+                        + sold1.getCoordinates().getX() + ":" + sold1.getCoordinates().getY());
+                fight(sold1, sold2);
+                break;
             }
-            if (weapon.toLowerCase().equals("gun")) {
-                Weapon weap = new Gun();
-                soldier.setWeapon(weap);
-            } else if (weapon.toLowerCase().equals("rifle")) {
-                Weapon weap = new Rifle();
-                soldier.setWeapon(weap);
-            } else if (weapon.toLowerCase().equals("shotgun")){
-                Weapon weap = new Shotgun();
-                soldier.setWeapon(weap);
-            }
-        } else if (race.toLowerCase().equals("mystic")) {
-            if (type.toLowerCase().equals("elf")) {
-                soldier = new Elf(name);
-            } else if (type.toLowerCase().equals("Troll")) {
-                soldier = new Troll(name);
-            } else {
-                soldier = new Orc(name);
-            }
-            if (weapon.toLowerCase().equals("axe")) {
-                Weapon weap = new Axe();
-                soldier.setWeapon(weap);
-            } else if (weapon.toLowerCase().equals("sword")) {
-                Weapon weap = new Sword();
-                soldier.setWeapon(weap);
-            } else if (weapon.toLowerCase().equals("knife")) {
-                Weapon weap = new Knife();
-                soldier.setWeapon(weap);
-            }
+
+                sold1.getCoordinates().setX(sold1.getSpeed());
+                System.out.println(sold1.getRace() + " "
+                        + sold1.getType() + " "
+                        + sold1.getName() + " (" + sold1.getHealth() + ") moved to "
+                        + sold1.getCoordinates().getX() + ":" + sold1.getCoordinates().getY());
+                sold2.getCoordinates().setX(-sold2.getSpeed());
+                System.out.println(sold2.getRace() + " "
+                        + sold2.getType() + " "
+                        + sold2.getName() + " (" + sold2.getHealth() + ") moved to "
+                        + sold2.getCoordinates().getX() + ":" + sold2.getCoordinates().getY());
         }
-        Coordinates coords = new Coordinates(x, y);
-        soldier.setCoordinates(coords);
-        soldiers[countSoldiers] = soldier;
-        this.countSoldiers++;
-    };
+    }
+
+    private void fight(Soldier sold1, Soldier sold2) {
+
+        while (sold1.getHealth() > 0 && sold2.getHealth() > 0) {
+            System.out.println(sold1.getRace() + " "
+                    + sold1.getType() + " "
+                    + sold1.getName() + " (" + sold1.getHealth() + ") Attacks "
+                    + sold2.getRace() + " "
+                    + sold2.getType() + " "
+                    + sold2.getName() + " (" + sold2.getHealth() + "), Damage: " +
+                    (sold1.getStrength() +
+                            sold1.getWeapon().getDamage()));
+
+            System.out.println(sold2.getRace() + " "
+                    + sold2.getType() + " "
+                    + sold2.getName() + " ("
+                    + sold2.getHealth() + ") Attacks "
+                    + sold1.getRace() + " "
+                    + sold1.getType() + " "
+                    + sold1.getName() + " ("
+                    + sold1.getHealth() + "), Damage: " +
+                    (sold2.getStrength() +
+                            sold2.getWeapon().getDamage()));
+
+            sold1.setHealth(sold2.getStrength() + sold2.getWeapon().getDamage());
+            sold2.setHealth(sold1.getStrength() + sold1.getWeapon().getDamage());
+
+        }
+
+        if (sold1.getHealth() <= 0) {
+            System.out.println(sold1.getRace() + " "
+                    + sold1.getType() + " "
+                    + sold1.getName() + " (" + 0 + ") Was Fallen By "
+                    + sold2.getRace() + " "
+                    + sold2.getType() + " "
+                    + sold2.getName());
+            return;
+        }
+
+        if (sold2.getHealth() <= 0) {
+            System.out.println(sold2.getRace() + " "
+                    + sold2.getType() + " "
+                    + sold2.getName() + " (" + 0 + ") Was Fallen By "
+                    + sold1.getRace() + " "
+                    + sold1.getType() + " "
+
+                    + sold1.getName());
+            return;
+        }
+
+    }
 
     public void start() {
-        for (int i = 0; i < rows * 2; i++) {
-            String[] selectedResults = new String[6];
-            Scanner input = new Scanner(System.in);
-            System.out.println("You Set " + rows + " Rows, Its Mean You Should Create " + (rows * 2) + " Characters");
-            System.out.print("Create Character: Whats Race is Your Character, Human Or Mystic? ");
-            selectedResults[0] = input.nextLine();
-            System.out.print("Now, Set Name: ");
-            selectedResults[2] = input.nextLine();
-            if (selectedResults[0].toLowerCase().equals("human")) {
-                System.out.print("You Choose " + selectedResults[0] + " Race, Now Choose Type Of " + selectedResults[0] + ": Infantry, Comando or General? ");
-                selectedResults[1] = input.nextLine();
-                System.out.print("You Choose " + selectedResults[1] + " Type, Now Choose Weapon: Shotgun, Gun or Rifle? ");
-            } else if (selectedResults[0].toLowerCase().equals("mystic")) {
-                System.out.print("You Choose " + selectedResults[0] + " Race, Now Choose Type Of " + selectedResults[0] + ": Orc, Troll, Elf? ");
-                selectedResults[1] = input.nextLine();
-                System.out.print("You Choose " + selectedResults[1] + " Type, Now Choose Weapon: Knife, Sword or Axe? ");
-            }
-            selectedResults[3] = input.nextLine();
-            System.out.print("Select X Coords: ");
-            selectedResults[4] = input.nextLine();
-            System.out.print("Select Y Coords: ");
-            selectedResults[5] = input.nextLine();
-
-            this.createCharacter(selectedResults[0], selectedResults[1],
-                    selectedResults[2], selectedResults[3],
-                    Integer.parseInt(selectedResults[4]),
-                    Integer.parseInt(selectedResults[5]));
-            System.out.println("Character Created Succesfully");
+        createCharacters();
+        for (Soldier soldier : soldiers) {
+            System.out.println(soldier.getRace() + " "
+                    + soldier.getType() + " "
+                    + soldier.getName() + " (" + soldier.getHealth() + ") arrived at "
+                    + soldier.getCoordinates().getX() + ":" + soldier.getCoordinates().getY() + " Armed with "
+                    + soldier.getWeapon().getName());
         }
+        System.out.println("\nSoldiers Are Created. \n--------------------");
+        moveProgress(soldiers[0], soldiers[2]);
     }
 }
