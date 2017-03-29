@@ -2,9 +2,11 @@ package com.example.wargame.game;
 
 import com.example.wargame.coordinates.Coordinates;
 import com.example.wargame.soldiers.Soldier;
+import com.example.wargame.soldiers.humans.Human;
 import com.example.wargame.soldiers.humans.types.Comando;
 import com.example.wargame.soldiers.humans.types.General;
 import com.example.wargame.soldiers.humans.types.Infantry;
+import com.example.wargame.soldiers.mystics.Mystic;
 import com.example.wargame.soldiers.mystics.types.Elf;
 import com.example.wargame.soldiers.mystics.types.Orc;
 import com.example.wargame.soldiers.mystics.types.Troll;
@@ -50,12 +52,12 @@ public class Game {
         babylon.setCoordinates(new Coordinates(cols, 1));
 
         soldiers[0] = bob;
-        soldiers[1] = john;
-        soldiers[3] = galactus;
-        soldiers[2] = babylon;
+        soldiers[2] = john;
+        soldiers[1] = galactus;
+        soldiers[3] = babylon;
     }
 
-    private void moveProgress(Soldier sold1, Soldier sold2) {
+    private void gameProgress(Soldier sold1, Soldier sold2) {
         while(sold1.getCoordinates().getX() != sold2.getCoordinates().getX()) {
 
             if (sold1.getCoordinates().getX() > sold2.getCoordinates().getX()) {
@@ -142,6 +144,17 @@ public class Game {
                     + soldier.getWeapon().getName());
         }
         System.out.println("\nSoldiers Are Created. \n--------------------");
-        moveProgress(soldiers[0], soldiers[2]);
+        for (int i = 0; i < soldiers.length; i++) {
+            for (int j = 0; j < i; j++) {
+
+                if (i == j) {break;}
+
+                if (soldiers[j] instanceof Human && soldiers[i] instanceof Human) {continue;}
+                if (soldiers[j] instanceof Mystic && soldiers[i] instanceof Mystic) {continue;}
+                gameProgress(soldiers[i], soldiers[j]);
+                fight(soldiers[i], soldiers[j]);
+
+            }
+        }
     }
 }
