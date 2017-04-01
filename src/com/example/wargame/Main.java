@@ -7,7 +7,7 @@ import com.example.wargame.game.Game;
  */
 public class Main {
     public static void main(String[] args) {
-        Game game = new Game(1, 20);
+        Game game = new Game(2, 20);
         game.start();
     }
 }

@@ -16,6 +16,7 @@ public abstract class Soldier {
     private Coordinates coordinates;
     private Weapon weapon;
 
+
     protected Soldier(String race, String name, String type, int health, int strength, int speed) {
         this.race = race;
         this.type = type;
@@ -24,6 +25,10 @@ public abstract class Soldier {
         this.strength = strength;
         this.speed = speed;
     }
+
+    public abstract boolean move(Soldier sold1);
+
+    public abstract boolean attack(Soldier sold1);
 
     public String getRace() {
         return race;

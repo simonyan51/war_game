@@ -52,86 +52,64 @@ public class Game {
         babylon.setCoordinates(new Coordinates(cols, 1));
 
         soldiers[0] = bob;
-        soldiers[2] = john;
         soldiers[1] = galactus;
+        soldiers[2] = john;
         soldiers[3] = babylon;
     }
 
-    private void gameProgress(Soldier sold1, Soldier sold2) {
-        while(sold1.getCoordinates().getX() != sold2.getCoordinates().getX()) {
+    private void gameProgress() {
+        boolean sold1Move = soldiers[0].move(soldiers[1]);
+        boolean sold2Move = soldiers[1].move(soldiers[0]);
+        boolean sold3Move = soldiers[2].move(soldiers[3]);
+        boolean sold4Move = soldiers[3].move(soldiers[2]);
 
-            if (sold1.getCoordinates().getX() > sold2.getCoordinates().getX()) {
-                sold1.getCoordinates().setX(-(sold1.getCoordinates().getX() - sold2.getCoordinates().getX()));
-                System.out.println(sold1.getRace() + " "
-                        + sold1.getType() + " "
-                        + sold1.getName() + " (" + sold1.getHealth() + ") moved to "
-                        + sold1.getCoordinates().getX() + ":" + sold1.getCoordinates().getY());
-                fight(sold1, sold2);
-                break;
+        while (sold1Move || sold2Move || sold3Move || sold4Move) {
+            if (!sold1Move || !sold2Move) {
+                soldiers[0].attack(soldiers[1]);
+                soldiers[1].attack(soldiers[0]);
+                sold3Move = soldiers[2].move(soldiers[3]);
+                sold4Move = soldiers[3].move(soldiers[2]);
             }
-
-                sold1.getCoordinates().setX(sold1.getSpeed());
-                System.out.println(sold1.getRace() + " "
-                        + sold1.getType() + " "
-                        + sold1.getName() + " (" + sold1.getHealth() + ") moved to "
-                        + sold1.getCoordinates().getX() + ":" + sold1.getCoordinates().getY());
-                sold2.getCoordinates().setX(-sold2.getSpeed());
-                System.out.println(sold2.getRace() + " "
-                        + sold2.getType() + " "
-                        + sold2.getName() + " (" + sold2.getHealth() + ") moved to "
-                        + sold2.getCoordinates().getX() + ":" + sold2.getCoordinates().getY());
-        }
-    }
-
-    private void fight(Soldier sold1, Soldier sold2) {
-
-        while (sold1.getHealth() > 0 && sold2.getHealth() > 0) {
-            System.out.println(sold1.getRace() + " "
-                    + sold1.getType() + " "
-                    + sold1.getName() + " (" + sold1.getHealth() + ") Attacks "
-                    + sold2.getRace() + " "
-                    + sold2.getType() + " "
-                    + sold2.getName() + " (" + sold2.getHealth() + "), Damage: " +
-                    (sold1.getStrength() +
-                            sold1.getWeapon().getDamage()));
-
-            System.out.println(sold2.getRace() + " "
-                    + sold2.getType() + " "
-                    + sold2.getName() + " ("
-                    + sold2.getHealth() + ") Attacks "
-                    + sold1.getRace() + " "
-                    + sold1.getType() + " "
-                    + sold1.getName() + " ("
-                    + sold1.getHealth() + "), Damage: " +
-                    (sold2.getStrength() +
-                            sold2.getWeapon().getDamage()));
-
-            sold1.setHealth(sold2.getStrength() + sold2.getWeapon().getDamage());
-            sold2.setHealth(sold1.getStrength() + sold1.getWeapon().getDamage());
-
+            if (!sold3Move || !sold4Move) {
+                sold1Move = soldiers[0].move(soldiers[1]);
+                sold2Move = soldiers[1].move(soldiers[0]);
+                soldiers[2].attack(soldiers[3]);
+                soldiers[3].attack(soldiers[2]);
+            }
+            sold1Move = soldiers[0].move(soldiers[1]);
+            sold2Move = soldiers[1].move(soldiers[0]);
+            sold3Move = soldiers[2].move(soldiers[3]);
+            sold4Move = soldiers[3].move(soldiers[2]);
         }
 
-        if (sold1.getHealth() <= 0) {
-            System.out.println(sold1.getRace() + " "
-                    + sold1.getType() + " "
-                    + sold1.getName() + " (" + 0 + ") Was Fallen By "
-                    + sold2.getRace() + " "
-                    + sold2.getType() + " "
-                    + sold2.getName());
-            return;
+        boolean soldAttack1 = soldiers[0].attack(soldiers[1]);
+        boolean soldAttack2 = soldiers[1].attack(soldiers[0]);
+        boolean soldAttack3 = soldiers[2].attack(soldiers[3]);
+        boolean soldAttack4 = soldiers[3].attack(soldiers[2]);
+
+        while(soldAttack1 ||
+                soldAttack2 ||
+                soldAttack3 ||
+                soldAttack4) {
+
+            soldAttack1 = soldiers[0].attack(soldiers[1]);
+            soldAttack2 = soldiers[1].attack(soldiers[0]);
+            soldAttack3 = soldiers[2].attack(soldiers[3]);
+            soldAttack4 = soldiers[3].attack(soldiers[2]);
         }
-
-        if (sold2.getHealth() <= 0) {
-            System.out.println(sold2.getRace() + " "
-                    + sold2.getType() + " "
-                    + sold2.getName() + " (" + 0 + ") Was Fallen By "
-                    + sold1.getRace() + " "
-                    + sold1.getType() + " "
-
-                    + sold1.getName());
-            return;
+        if (soldiers[0].getHealth() > 0 && soldiers[2].getHealth() > 0) {
+            System.out.println("Human Wins");
+        } else if (soldiers[1].getHealth() > 0 && soldiers[3].getHealth() > 0) {
+            System.out.println("Mystic Wins");
+        } else if (soldiers[0].getHealth() > soldiers[3].getHealth() ||
+                soldiers[2].getHealth() > soldiers[1].getHealth()) {
+            System.out.println("Human Wins");
+        } else if (soldiers[3].getHealth() > soldiers[0].getHealth() ||
+                soldiers[1].getHealth() > soldiers[2].getHealth()) {
+            System.out.println("Mystic Wins");
+        } else {
+            System.out.println("Draw");
         }
-
     }
 
     public void start() {
@@ -144,17 +122,6 @@ public class Game {
                     + soldier.getWeapon().getName());
         }
         System.out.println("\nSoldiers Are Created. \n--------------------");
-        for (int i = 0; i < soldiers.length; i++) {
-            for (int j = 0; j < i; j++) {
-
-                if (i == j) {break;}
-
-                if (soldiers[j] instanceof Human && soldiers[i] instanceof Human) {continue;}
-                if (soldiers[j] instanceof Mystic && soldiers[i] instanceof Mystic) {continue;}
-                gameProgress(soldiers[i], soldiers[j]);
-                fight(soldiers[i], soldiers[j]);
-
-            }
-        }
+        gameProgress();
     }
 }

@@ -17,5 +17,4 @@ public abstract class Human extends Soldier {
     protected Human(String name, String type, int health, int strength, int speed) {
         super(RACE, name, type, health, strength, speed);
     }
-
 }
